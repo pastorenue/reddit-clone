@@ -1,0 +1,29 @@
+All that happens behind the hood with sessions and redis
+---------------------------------------------=---------
+
+1
+Redis is a key value pair database. it stores sessions this way:
+sess:efsdhgrtdhbsgf -> {userId: 1} (key:value)
+
+2. 
+when a user login, express session stores a cookie which is the 
+signed/encrypted version of the redis key
+(2wfsgfxgsdbdfbxvcxv)
+
+3. 
+when the user makes a request, the encrypted value stored in our browser is sent to the server
+2wfsgfxgsdbdfbxvcxv -> server
+
+4.
+the cookie is decrypted using the secrete key passed during the session configuration to get the redis key
+2wfsgfxgsdbdfbxvcxv -> sess:efsdhgrtdhbsgf
+
+5. 
+the decrypted redis key is then used to make a request to the redis database
+sess:efsdhgrtdhbsgf -> {userId: 1}
+
+6. 
+the retrieved value is then stored in the request
+req.session = {userId: 1}
+
+
